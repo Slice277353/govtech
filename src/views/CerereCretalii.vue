@@ -1,6 +1,16 @@
 <template>
   <div class="cerere-page">
+    <div class="client-info">
+    </div>
     <div class="table-container">
+      <!-- Placeholder Name -->
+      <p>
+        Nume: Ion Popescu
+      </p>
+      <!-- Randomly Generated IDNP -->
+      <p>
+        IDNP: {{ idnp }}
+      </p>
       <table>
         <thead>
           <tr>
@@ -69,6 +79,11 @@ export default {
   name: 'CerereCretalii',
   data() {
     return {
+      idnp: '', // Randomly generated IDNP
+      clientDetails: {
+        firstName: '',
+        lastName: ''
+      },
       animals: [
         { id: 1, name: 'Bovine', price: 15 },
         { id: 2, name: 'Ovine', price: 12 },
@@ -82,6 +97,15 @@ export default {
       tableRows: []
     }
   },
+  watch: {
+    idnp(newIDNP) {
+      if (newIDNP.length === 13) {
+        this.fetchClientDetails(newIDNP);
+      } else {
+        this.clientDetails = { firstName: '', lastName: '' };
+      }
+    }
+  },
   computed: {
     hasValidOrder() {
       return this.tableRows.some(row => 
@@ -90,6 +114,8 @@ export default {
     }
   },
   created() {
+    // Generate a random IDNP on component creation
+    this.idnp = '4' + Math.random().toString().slice(2, 13);
     // Verificăm dacă suntem în modul de modificare
     const isModifying = localStorage.getItem('isModifying')
     if (isModifying) {
@@ -116,6 +142,28 @@ export default {
     }
   },
   methods: {
+    fetchClientDetails(idnp) {
+      fetch(`http://localhost:3000/clients?IDNP=${idnp}`)
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to fetch client details');
+          return response.json();
+        })
+        .then(clients => {
+          if (clients.length > 0) {
+            const client = clients[0];
+            this.clientDetails = {
+              firstName: client.firstName || 'Ion',
+              lastName: client.lastName || 'Popescu'
+            };
+          } else {
+            this.clientDetails = { firstName: 'Ion', lastName: 'Popescu' };
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching client details:', error);
+          this.clientDetails = { firstName: 'Ion', lastName: 'Popescu' };
+        });
+    },
     findAnimalById(id) {
       return this.animals.find(animal => animal.id === id)
     },
@@ -268,6 +316,12 @@ export default {
   background-color: var(--light-gray);
 }
 
+.client-info {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
 .table-container {
   background: white;
   border-radius: var(--radius-md);
@@ -275,6 +329,12 @@ export default {
   box-shadow: var(--shadow-sm);
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.table-container p {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
 table {

@@ -3,6 +3,15 @@
     <div class="confirmare-container">
       <h2>Confirmarea comenzii</h2>
       
+      <!-- Placeholder Name -->
+      <p>
+        Nume: Ion Popescu
+      </p>
+      <!-- Randomly Generated IDNP -->
+      <p>
+        IDNP: {{ idnp }}
+      </p>
+
       <div class="order-details">
         <div class="order-summary">
           <table>
@@ -35,10 +44,8 @@
               id="name" 
               v-model="clientDetails.name"
               :class="{ 'error': validationErrors.name }"
+              disabled
             >
-            <span class="error-message" v-if="validationErrors.name">
-              {{ validationErrors.name }}
-            </span>
           </div>
 
           <div class="form-group">
@@ -48,10 +55,8 @@
               id="phone" 
               v-model="clientDetails.phone"
               :class="{ 'error': validationErrors.phone }"
+              disabled
             >
-            <span class="error-message" v-if="validationErrors.phone">
-              {{ validationErrors.phone }}
-            </span>
           </div>
 
           <div class="form-group">
@@ -61,10 +66,8 @@
               id="email" 
               v-model="clientDetails.email"
               :class="{ 'error': validationErrors.email }"
+              disabled
             >
-            <span class="error-message" v-if="validationErrors.email">
-              {{ validationErrors.email }}
-            </span>
           </div>
         </div>
       </div>
@@ -97,12 +100,13 @@ export default {
   name: 'ConfirmareCerere',
   data() {
     return {
+      idnp: '', // Randomly generated IDNP
       orderData: {
         items: [],
         total: 0
       },
       clientDetails: {
-        name: '',
+        name: 'Ion Popescu',
         phone: '',
         email: ''
       },
@@ -115,6 +119,9 @@ export default {
     };
   },
   created() {
+    // Generate a random IDNP on component creation
+    this.idnp = '4' + Math.random().toString().slice(2, 13);
+
     // Fetch the latest order data from the JSON database
     fetch('http://localhost:3000/clients')
       .then(response => {
@@ -144,7 +151,7 @@ export default {
 
           // Populate client details
           this.clientDetails = {
-            name: latestClient.name || '',
+            name: 'Ion Popescu',
             phone: latestClient.phone || '',
             email: latestClient.email || ''
           };
@@ -238,6 +245,12 @@ export default {
   border-radius: var(--radius-md);
   padding: 24px;
   box-shadow: var(--shadow-sm);
+}
+
+.confirmare-container p {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 
 h2 {
