@@ -39,6 +39,23 @@
         "0000000014",
         "0000000015"
       ]
+    },
+    {
+      "id": "69e8",
+      "IDNP": "441369028270",
+      "animalCodes": [
+        "0000000016",
+        "0000000017",
+        "0000000018"
+      ]
+    },
+    {
+      "id": "e0a2",
+      "IDNP": "461668467743",
+      "animalCodes": [
+        "0000000019",
+        "0000000020"
+      ]
     }
   ],
   "clients": [
@@ -258,16 +275,57 @@
           "total": 50
         }
       ]
+    },
+    {
+      "id": "60a9",
+      "IDNP": "461668467743",
+      "orders": [
+        {
+          "orderId": 1744480691743,
+          "date": "2025-04-12T17:58:11.743Z",
+          "status": "pending",
+          "items": [
+            {
+              "animalTypeId": 1,
+              "animalTypeName": "Bovine",
+              "quantity": 2,
+              "unitPrice": 15,
+              "rowTotal": 30
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000019",
+              "animalTypeId": 1,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000020",
+              "animalTypeId": 1,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            }
+          ],
+          "total": 30
+        }
+      ]
     }
   ],
   "animalCodeCounter": {
     "item": {
       "item": {
-        "value": 6
+        "item": {
+          "item": {
+            "value": 6
+          },
+          "value": 11
+        },
+        "value": 16
       },
-      "value": 11
+      "value": 19
     },
-    "value": 16
+    "value": 21
   },
   "config": {
     "animalTypes": [

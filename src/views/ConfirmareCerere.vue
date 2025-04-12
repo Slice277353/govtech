@@ -200,20 +200,23 @@ export default {
     validateAndConfirm() {
       if (this.validateForm()) {
         this.isSubmitting = true;
-        
-        // Salvăm detaliile clientului
-        localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails))
-        
-        // Salvăm datele comenzii pentru MPay
+
+        // Save client details
+        localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails));
+
+        // Save order data for MPay
         const orderDetails = {
-          orderData: this.orderData,
+          orderData: {
+            orderNumber: Date.now().toString(), // Generate a unique order number
+            total: this.orderData.total
+          },
           clientDetails: this.clientDetails,
           timestamp: new Date().toISOString()
-        }
-        localStorage.setItem('orderForPayment', JSON.stringify(orderDetails))
+        };
+        localStorage.setItem('orderForPayment', JSON.stringify(orderDetails));
 
-        // Redirecționăm către pagina MPay
-        this.$router.push('/mpay')
+        // Redirect to MPay page
+        this.$router.push('/mpay');
       }
     },
     showModifyPrompt() {

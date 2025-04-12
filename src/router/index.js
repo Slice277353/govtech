@@ -9,6 +9,8 @@ import CerereDuplicat from '../views/CerereDuplicat.vue'
 import ConfirmareCerere from '../views/ConfirmareCerere.vue'
 import MPayPayment from '@/views/MPayPayment.vue'; 
 import PaymentSuccess from '@/views/PaymentSuccess.vue';
+import AnimalDetails from '@/views/AnimalDetails.vue';
+import AdminPanel from '@/views/AdminPanel.vue';
 
 const routes = [
   {
@@ -43,7 +45,7 @@ const routes = [
     component: CerereDuplicat
   },
   {
-    path: '/mpay-payment',
+    path: '/mpay',
     name: 'MPayPayment',
     component: MPayPayment
   },
@@ -51,6 +53,16 @@ const routes = [
     path: '/payment-success',
     name: 'PaymentSuccess',
     component: PaymentSuccess
+  },
+  {
+    path: '/animal-details',
+    name: 'AnimalDetails',
+    component: AnimalDetails,
+  },
+  {
+    path: '/admin-panel',
+    name: 'AdminPanel',
+    component: AdminPanel
   }
 ];
 
