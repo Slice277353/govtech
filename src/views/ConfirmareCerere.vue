@@ -115,8 +115,9 @@ export default {
         name: '',
         phone: '',
         email: ''
-      }
-    };
+      },
+      isSubmitting: false
+    }
   },
   created() {
     // Generate a random IDNP on component creation
@@ -198,9 +199,21 @@ export default {
     },
     validateAndConfirm() {
       if (this.validateForm()) {
-        // Save client details
-        localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails));
-        this.confirmOrder();
+        this.isSubmitting = true;
+        
+        // Salvăm detaliile clientului
+        localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails))
+        
+        // Salvăm datele comenzii pentru MPay
+        const orderDetails = {
+          orderData: this.orderData,
+          clientDetails: this.clientDetails,
+          timestamp: new Date().toISOString()
+        }
+        localStorage.setItem('orderForPayment', JSON.stringify(orderDetails))
+
+        // Redirecționăm către pagina MPay
+        this.$router.push('/mpay')
       }
     },
     showModifyPrompt() {
