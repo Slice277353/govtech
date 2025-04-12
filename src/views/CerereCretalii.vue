@@ -147,88 +147,99 @@ export default {
       this.tableRows.push({ selectedAnimal: null, quantity: 0 })
     },
     placeOrder() {
-  // Generate IDNP (13 digits starting with 4)
-  const generateIDNP = () => '4' + Math.random().toString().slice(2, 13);
+  // Generate or get IDNP (will come from auth later)
+  const clientIDNP = '4' + Math.random().toString().slice(2, 13); 
 
-  // First get current counter
+  // Get current counter value
   fetch('http://localhost:3000/animalCodeCounter')
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) throw new Error('Counter fetch failed');
+      return response.json();
+    })
     .then(counter => {
-      const orderIDNP = generateIDNP();
-      const orderItems = [];
-      let animalsCreated = 0;
+      // Process order items
+      const orderItems = this.tableRows
+        .filter(row => row.selectedAnimal && row.quantity > 0)
+        .map(row => ({
+          animalTypeId: row.selectedAnimal.id,
+          animalTypeName: row.selectedAnimal.name,
+          quantity: row.quantity,
+          unitPrice: row.selectedAnimal.price,
+          rowTotal: row.selectedAnimal.price * row.quantity
+        }));
 
-      // Process each row in the order
+      // Generate animal codes
+      const individualAnimals = [];
+      let currentCounter = counter;
+      
       this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0)
         .forEach(row => {
-          // Create individual animals
           for (let i = 0; i < row.quantity; i++) {
-            const animalCode = (counter + animalsCreated).toString().padStart(10, '0');
-            animalsCreated++;
-            
-            orderItems.push({
+            individualAnimals.push({
+              animalCode: (currentCounter++).toString().padStart(10, '0'),
               animalTypeId: row.selectedAnimal.id,
-              animalTypeName: row.selectedAnimal.name,
-              unitPrice: row.selectedAnimal.price,
-              animalCode: animalCode,
-              status: 'active'
+              status: 'active',
+              registrationDate: new Date().toISOString().split('T')[0]
             });
           }
         });
 
-      // Create the order
-      const orderData = {
-        IDNP: orderIDNP,
-        items: this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0)
-          .map(row => ({
-            animalTypeId: row.selectedAnimal.id,
-            animalTypeName: row.selectedAnimal.name,
-            quantity: row.quantity,
-            unitPrice: row.selectedAnimal.price,
-            rowTotal: this.calculateRowTotal(row)
-          })),
-        individualAnimals: orderItems.map(a => a.animalCode),
-        total: this.calculateTotal(),
+      // Create order object
+      const newOrder = {
+        orderId: Date.now(),
         date: new Date().toISOString(),
-        status: 'pending'
+        status: 'pending',
+        items: orderItems,
+        individualAnimals,
+        total: orderItems.reduce((sum, item) => sum + item.rowTotal, 0)
       };
 
-      // Save to localStorage
-      localStorage.setItem('currentOrder', JSON.stringify(orderData));
-      localStorage.removeItem('isModifying');
-
-      // First create all individual animals
-      const animalPromises = orderItems.map(animal => 
-        fetch('http://localhost:3000/individualAnimals', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(animal)
+      // Check if client exists
+      return fetch(`http://localhost:3000/clients?IDNP=${clientIDNP}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Client lookup failed');
+          return res.json();
         })
-      );
-
-      return Promise.all(animalPromises)
-        .then(() => fetch('http://localhost:3000/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        }));
+        .then(clients => {
+          if (clients.length > 0) {
+            // Update existing client
+            const client = clients[0];
+            client.orders = client.orders || [];
+            client.orders.push(newOrder);
+            return fetch(`http://localhost:3000/clients/${client.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(client)
+            });
+          } else {
+            // Create new client
+            return fetch('http://localhost:3000/clients', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                IDNP: clientIDNP,
+                orders: [newOrder]
+              })
+            });
+          }
+        })
+        .then(() => {
+          // Update counter
+          return fetch('http://localhost:3000/animalCodeCounter', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ value: currentCounter })
+          });
+        });
     })
     .then(() => {
-      // Update the counter
-      const totalAnimals = this.tableRows
-        .filter(row => row.selectedAnimal && row.quantity > 0)
-        .reduce((sum, row) => sum + row.quantity, 0);
-      
-      return fetch('http://localhost:3000/animalCodeCounter', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ value: totalAnimals })
-      });
-    })
-    .then(() => this.$router.push('/confirmare-cerere'))
-    .catch(error => {
-      console.error('Error:', error);
+      localStorage.setItem('currentOrder', JSON.stringify({ clientIDNP }));
+      localStorage.removeItem('isModifying');
       this.$router.push('/confirmare-cerere');
+    })
+    .catch(error => {
+      console.error('Error saving order:', error);
+      alert('Eroare la salvarea comenzii. Vă rugăm încercați din nou.');
     });
 }
   }
