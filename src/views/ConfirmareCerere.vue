@@ -9,15 +9,17 @@
             <thead>
               <tr>
                 <th>Animal</th>
-                <th>Numar crotalie</th>
+                <th>Cantitate</th>
                 <th>Preț unitar</th>
+                <th>Total</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in orderData.items" :key="index">
-                <td>{{ item.selectedAnimal.name }}</td>
-                <td>{{ item.crotalieNumber }}</td>
-                <td>{{ item.selectedAnimal.price }} MDL</td>
+                <td>{{ item.animalTypeName }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unitPrice }} MDL</td>
+                <td>{{ item.rowTotal }} MDL</td>
               </tr>
             </tbody>
           </table>
@@ -110,93 +112,116 @@ export default {
         phone: '',
         email: ''
       }
-    }
+    };
   },
   created() {
-    const savedOrder = localStorage.getItem('currentOrder')
-    if (savedOrder) {
-      this.orderData = JSON.parse(savedOrder)
-      
-      // Încărcăm detaliile clientului dacă există
-      const savedClientDetails = localStorage.getItem('clientDetails')
-      if (savedClientDetails) {
-        this.clientDetails = JSON.parse(savedClientDetails)
-      }
-    } else {
-      this.$router.push('/cerere-crotalii')
-    }
+    // Fetch the latest order data from the JSON database
+    fetch('http://localhost:3000/clients')
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to fetch clients');
+        return response.json();
+      })
+      .then(clients => {
+        // Find the client with the most recent order
+        let latestClient = null;
+        let latestOrder = null;
+
+        clients.forEach(client => {
+          if (client.orders && client.orders.length > 0) {
+            const clientLatestOrder = client.orders[client.orders.length - 1];
+            if (!latestOrder || new Date(clientLatestOrder.date) > new Date(latestOrder.date)) {
+              latestClient = client;
+              latestOrder = clientLatestOrder;
+            }
+          }
+        });
+
+        if (latestClient && latestOrder) {
+          this.orderData = {
+            items: latestOrder.items,
+            total: latestOrder.total
+          };
+
+          // Populate client details
+          this.clientDetails = {
+            name: latestClient.name || '',
+            phone: latestClient.phone || '',
+            email: latestClient.email || ''
+          };
+        } else {
+          this.$router.push('/cerere-crotalii'); // Redirect if no order found
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching order data:', error);
+        alert('Eroare la încărcarea datelor comenzii.');
+        this.$router.push('/cerere-crotalii');
+      });
   },
   methods: {
     validateForm() {
-      let isValid = true
+      let isValid = true;
       this.validationErrors = {
         name: '',
         phone: '',
         email: ''
-      }
+      };
 
-      // Validare nume
+      // Validate name
       if (!this.clientDetails.name.trim()) {
-        this.validationErrors.name = 'Numele este obligatoriu'
-        isValid = false
+        this.validationErrors.name = 'Numele este obligatoriu';
+        isValid = false;
       }
 
-      // Validare telefon
-      const phoneRegex = /^(?:\+373|0)(?:6[789]|7[89])\d{6}$/
+      // Validate phone
+      const phoneRegex = /^(?:\+373|0)(?:6[789]|7[89])\d{6}$/;
       if (!phoneRegex.test(this.clientDetails.phone)) {
-        this.validationErrors.phone = 'Numărul de telefon nu este valid'
-        isValid = false
+        this.validationErrors.phone = 'Numărul de telefon nu este valid';
+        isValid = false;
       }
 
-      // Validare email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(this.clientDetails.email)) {
-        this.validationErrors.email = 'Adresa de email nu este validă'
-        isValid = false
+        this.validationErrors.email = 'Adresa de email nu este validă';
+        isValid = false;
       }
 
-      return isValid
+      return isValid;
     },
-
     validateAndConfirm() {
       if (this.validateForm()) {
-        // Salvăm detaliile clientului
-        localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails))
-        this.confirmOrder()
+        // Save client details
+        localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails));
+        this.confirmOrder();
       }
     },
-
     showModifyPrompt() {
-      this.showModifyConfirm = true
+      this.showModifyConfirm = true;
     },
-
     modifyOrder() {
-      localStorage.setItem('isModifying', 'true')
-      this.$router.push('/cerere-crotalii')
+      localStorage.setItem('isModifying', 'true');
+      this.$router.push('/cerere-crotalii');
     },
-
     cancelModify() {
-      this.showModifyConfirm = false
+      this.showModifyConfirm = false;
     },
-
     cancelOrder() {
       if (confirm('Sunteți sigur că doriți să anulați comanda?')) {
-        localStorage.removeItem('currentOrder')
-        localStorage.removeItem('clientDetails')
-        this.$router.push('/')
+        localStorage.removeItem('currentOrder');
+        localStorage.removeItem('clientDetails');
+        this.$router.push('/');
       }
     },
-
     confirmOrder() {
-      // Aici puteți adăuga logica pentru trimiterea comenzii către server
-      alert('Comanda a fost plasată cu succes!')
-      localStorage.removeItem('currentOrder')
-      localStorage.removeItem('isModifying')
-      localStorage.removeItem('clientDetails')
-      this.$router.push('/')
+      alert('Comanda a fost plasată cu succes!');
+      localStorage.removeItem('currentOrder');
+      localStorage.removeItem('isModifying');
+      localStorage.removeItem('clientDetails');
+      this.$router.push('/');
     }
   }
-}
+};
 </script>
 
 <style scoped>
