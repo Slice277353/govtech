@@ -1,0 +1,111 @@
+@import './base.css';
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-bar {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.top-actions {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+}
+
+.top-actions span {
+  cursor: pointer;
+}
+
+.top-actions span:hover {
+  opacity: 0.9;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--light-gray);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 300px);
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.card-content h2 {
+  color: var(--text-dark);
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 16px;
+    width: 100%;
+  }
+
+  .card {
+    height: 150px;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-bar {
+    padding: 0 16px;
+  }
+
+  .top-actions {
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .card-content h2 {
+    font-size: 20px;
+  }
+}
