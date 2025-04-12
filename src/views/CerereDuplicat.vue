@@ -88,18 +88,47 @@ export default {
     addRow() {
       this.tableRows.push({ crotalieNumber: '' })
     },
-    placeOrder() {
-  const orderData = {
-    items: this.tableRows.filter(row => row.crotalieNumber).map(row => ({
-      selectedAnimal: this.bovine,
-      crotalieNumber: row.crotalieNumber
-    })),
-    total: this.calculateTotal()
-  }
-  localStorage.setItem('currentOrder', JSON.stringify(orderData))
-  localStorage.removeItem('isModifying')
-  this.$router.push('/mpay-payment')
-}
+    async placeOrder() {
+      try {
+        const hardcodedIDNP = localStorage.getItem('hardcodedIDNP');
+        if (!hardcodedIDNP) {
+          alert('IDNP-ul nu a fost setat. Vă rugăm să vă autentificați din nou.');
+          return;
+        }
+
+        const crotalieNumbers = this.tableRows
+          .filter(row => row.crotalieNumber)
+          .map(row => row.crotalieNumber);
+
+        if (crotalieNumbers.length === 0) {
+          alert('Vă rugăm introduceți cel puțin un număr de crotalie valid.');
+          return;
+        }
+
+        const validationPromises = crotalieNumbers.map(number =>
+          fetch(`http://localhost:3000/idnpRecords?IDNP=${hardcodedIDNP}`)
+            .then(res => res.json())
+            .then(records => ({
+              number,
+              exists: records.some(record => record.animalCodes.includes(number))
+            }))
+        );
+
+        const validationResults = await Promise.all(validationPromises);
+        const invalidNumbers = validationResults.filter(r => !r.exists).map(r => r.number);
+
+        if (invalidNumbers.length > 0) {
+          alert(`Următoarele numere de crotalii nu sunt asociate cu IDNP-ul:\n${invalidNumbers.join('\n')}`);
+          return;
+        }
+
+        // All numbers are valid, navigate to order confirmation
+        this.$router.push('/confirmare-cerere');
+      } catch (error) {
+        console.error('Error placing order:', error);
+        alert('A apărut o eroare la procesarea comenzii. Vă rugăm încercați din nou.');
+      }
+    }
   }
 }
 </script>

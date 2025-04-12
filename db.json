@@ -1,0 +1,277 @@
+{
+  "idnpRecords": [
+    {
+      "id": "1",
+      "IDNP": "431382043871",
+      "animalCodes": [
+        "0000000001",
+        "0000000002",
+        "0000000003"
+      ]
+    },
+    {
+      "id": "2",
+      "IDNP": "432205272461",
+      "animalCodes": [
+        "0000000004",
+        "0000000005",
+        "0000000006"
+      ]
+    },
+    {
+      "id": "2a39",
+      "IDNP": "413288808544",
+      "animalCodes": [
+        "0000000006",
+        "0000000007",
+        "0000000008",
+        "0000000009",
+        "0000000010"
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "id": "1",
+      "IDNP": "431382043871",
+      "orders": [
+        {
+          "orderId": 1744477568969,
+          "date": "2025-04-10T10:00:00.000Z",
+          "status": "completed",
+          "items": [
+            {
+              "animalTypeId": 1,
+              "animalTypeName": "Bovine",
+              "quantity": 2,
+              "unitPrice": 15,
+              "rowTotal": 30
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000001",
+              "animalTypeId": 1,
+              "status": "active",
+              "registrationDate": "2025-04-10"
+            },
+            {
+              "animalCode": "0000000002",
+              "animalTypeId": 1,
+              "status": "active",
+              "registrationDate": "2025-04-10"
+            }
+          ],
+          "total": 30
+        },
+        {
+          "orderId": 1744477568970,
+          "date": "2025-04-11T12:00:00.000Z",
+          "status": "pending",
+          "items": [
+            {
+              "animalTypeId": 2,
+              "animalTypeName": "Ovine",
+              "quantity": 3,
+              "unitPrice": 12,
+              "rowTotal": 36
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000003",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-11"
+            },
+            {
+              "animalCode": "0000000004",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-11"
+            },
+            {
+              "animalCode": "0000000005",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-11"
+            }
+          ],
+          "total": 36
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "IDNP": "432205272461",
+      "orders": [
+        {
+          "orderId": 1744477568971,
+          "date": "2025-04-12T14:00:00.000Z",
+          "status": "completed",
+          "items": [
+            {
+              "animalTypeId": 3,
+              "animalTypeName": "Caprine",
+              "quantity": 4,
+              "unitPrice": 12,
+              "rowTotal": 48
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000006",
+              "animalTypeId": 3,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000007",
+              "animalTypeId": 3,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000008",
+              "animalTypeId": 3,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000009",
+              "animalTypeId": 3,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            }
+          ],
+          "total": 48
+        }
+      ]
+    },
+    {
+      "id": "9c23",
+      "IDNP": "413288808544",
+      "orders": [
+        {
+          "orderId": 1744477568969,
+          "date": "2025-04-12T17:06:08.969Z",
+          "status": "pending",
+          "items": [
+            {
+              "animalTypeId": 4,
+              "animalTypeName": "Porcine",
+              "quantity": 5,
+              "unitPrice": 10,
+              "rowTotal": 50
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000006",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000007",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000008",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000009",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000010",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            }
+          ],
+          "total": 50
+        },
+        {
+          "orderId": 1744477568972,
+          "date": "2025-04-13T16:00:00.000Z",
+          "status": "pending",
+          "items": [
+            {
+              "animalTypeId": 4,
+              "animalTypeName": "Porcine",
+              "quantity": 5,
+              "unitPrice": 10,
+              "rowTotal": 50
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000010",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-13"
+            },
+            {
+              "animalCode": "0000000011",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-13"
+            },
+            {
+              "animalCode": "0000000012",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-13"
+            },
+            {
+              "animalCode": "0000000013",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-13"
+            },
+            {
+              "animalCode": "0000000014",
+              "animalTypeId": 4,
+              "status": "active",
+              "registrationDate": "2025-04-13"
+            }
+          ],
+          "total": 50
+        }
+      ]
+    }
+  ],
+  "animalCodeCounter": {
+    "item": {
+      "value": 6
+    },
+    "value": 11
+  },
+  "config": {
+    "animalTypes": [
+      {
+        "id": 1,
+        "name": "Bovine",
+        "price": 15
+      },
+      {
+        "id": 2,
+        "name": "Ovine",
+        "price": 12
+      },
+      {
+        "id": 3,
+        "name": "Caprine",
+        "price": 12
+      }
+    ]
+  }
+}

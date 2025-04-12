@@ -143,6 +143,7 @@
         try {
           const success = await auth.login();
           if (success) {
+            this.assignHardcodedIDNP();
             this.$router.push('/auth-success');
             } else {
              throw new Error('Autentificare eșuată');
@@ -153,6 +154,12 @@
         } finally {
           this.loading = false;
         }
+      },
+  
+      assignHardcodedIDNP() {
+        const lastDigit = parseInt(this.phoneNumber.slice(-1), 10);
+        const hardcodedIDNP = lastDigit % 2 === 0 ? '432205272461' : '431382043871';
+        localStorage.setItem('hardcodedIDNP', hardcodedIDNP);
       },
   
       resetAuth() {
