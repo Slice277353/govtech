@@ -47,16 +47,26 @@
           <tbody>
             <tr v-for="(item, index) in selectedRequest.items" :key="index">
               <td>{{ item.animalTypeName }}</td>
-              <td>{{ item.quantity }}</td>
+              <td>
+                <input 
+                  type="number" 
+                  v-model.number="item.quantity" 
+                  class="editable-input"
+                  :disabled="!isModifying"
+                  @input="updateRowTotal(item)"
+                />
+              </td>
               <td>{{ item.unitPrice }} MDL</td>
               <td>{{ item.rowTotal }} MDL</td>
             </tr>
           </tbody>
         </table>
         <div class="actions">
-          <button @click="acceptRequest(selectedRequest)" class="accept-btn">Acceptă</button>
-          <button @click="modifyRequest(selectedRequest)" class="modify-btn">Modifică</button>
-          <button @click="denyRequest(selectedRequest)" class="deny-btn">Respinge</button>
+          <button v-if="!isModifying" @click="acceptRequest(selectedRequest)" class="accept-btn">Acceptă</button>
+          <button v-if="!isModifying" @click="enableModification" class="modify-btn">Modifică</button>
+          <button v-if="!isModifying" @click="denyRequest(selectedRequest)" class="deny-btn">Respinge</button>
+          <button v-if="isModifying" @click="saveChanges" class="save-btn">Salvează</button>
+          <button v-if="isModifying" @click="cancelModification" class="cancel-btn">Anulează</button>
         </div>
       </div>
     </div>
@@ -69,7 +79,8 @@ export default {
   data() {
     return {
       requests: [], // List of cerere (requests)
-      selectedRequest: null // Currently selected request
+      selectedRequest: null, // Currently selected request
+      isModifying: false // Flag to enable/disable modification
     };
   },
   created() {
@@ -99,20 +110,33 @@ export default {
         });
     },
     openRequestDetails(request) {
-      this.selectedRequest = request;
+      this.selectedRequest = JSON.parse(JSON.stringify(request)); // Deep copy to avoid direct mutation
+      this.isModifying = false;
     },
     closeRequestDetails() {
       this.selectedRequest = null;
+      this.isModifying = false;
+    },
+    enableModification() {
+      this.isModifying = true;
+    },
+    cancelModification() {
+      this.isModifying = false;
+    },
+    updateRowTotal(item) {
+      item.rowTotal = item.unitPrice * item.quantity;
+    },
+    saveChanges() {
+      const index = this.requests.findIndex(r => r.idnp === this.selectedRequest.idnp);
+      if (index !== -1) {
+        this.requests[index] = JSON.parse(JSON.stringify(this.selectedRequest)); // Save changes
+        alert('Modificările au fost salvate cu succes.');
+        this.isModifying = false; // Return to the initial state
+      }
     },
     acceptRequest(request) {
       alert(`Cererea cu IDNP ${request.idnp} a fost acceptată.`);
       this.removeRequest(request);
-    },
-    modifyRequest(request) {
-      localStorage.setItem('isModifying', 'true');
-      localStorage.setItem('currentOrder', JSON.stringify(request));
-      this.removeRequest(request);
-      this.$router.push('/cerere-crotalii');
     },
     denyRequest(request) {
       if (confirm(`Sunteți sigur că doriți să respingeți cererea cu IDNP ${request.idnp}?`)) {
@@ -121,8 +145,11 @@ export default {
       }
     },
     removeRequest(request) {
-      this.requests = this.requests.filter(r => r !== request);
-      this.selectedRequest = null;
+      const index = this.requests.findIndex(r => r.idnp === request.idnp);
+      if (index !== -1) {
+        this.requests.splice(index, 1); // Properly remove the request
+        this.selectedRequest = null;
+      }
     }
   }
 };
@@ -198,6 +225,14 @@ th {
   max-width: 600px;
 }
 
+.editable-input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+}
+
 .actions {
   display: flex;
   justify-content: center;
@@ -224,6 +259,24 @@ th {
 }
 
 .deny-btn {
+  background-color: #EA4335;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.save-btn {
+  background-color: #34A853;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.cancel-btn {
   background-color: #EA4335;
   color: white;
   padding: 8px 16px;
