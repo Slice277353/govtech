@@ -201,13 +201,6 @@ input[type="number"] {
   cursor: not-allowed;
 }
 
-.crotalie-input {
-  width: 200px;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-}
-
 @media (max-width: 768px) {
   .cerere-page {
     padding: 16px;

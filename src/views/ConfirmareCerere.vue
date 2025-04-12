@@ -9,25 +9,17 @@
             <thead>
               <tr>
                 <th>Animal</th>
-                <th>Cantitate</th>
+                <th>Numar crotalie</th>
                 <th>Preț unitar</th>
-                <th>Total</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in orderData.items" :key="index">
                 <td>{{ item.selectedAnimal.name }}</td>
-                <td>{{ item.quantity }}</td>
+                <td>{{ item.crotalieNumber }}</td>
                 <td>{{ item.selectedAnimal.price }} MDL</td>
-                <td>{{ item.selectedAnimal.price * item.quantity }} MDL</td>
               </tr>
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" class="total-label">Total:</td>
-                <td class="total-amount">{{ orderData.total }} MDL</td>
-              </tr>
-            </tfoot>
           </table>
         </div>
 
