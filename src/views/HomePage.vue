@@ -81,7 +81,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 200px;
+  min-height: 240px;
 }
 
 .card:hover {

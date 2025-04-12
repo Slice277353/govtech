@@ -89,17 +89,17 @@ export default {
       this.tableRows.push({ crotalieNumber: '' })
     },
     placeOrder() {
-      const orderData = {
-        items: this.tableRows.filter(row => row.crotalieNumber).map(row => ({
-          selectedAnimal: this.bovine,
-          crotalieNumber: row.crotalieNumber
-        })),
-        total: this.calculateTotal()
-      }
-      localStorage.setItem('currentOrder', JSON.stringify(orderData))
-      localStorage.removeItem('isModifying')
-      this.$router.push('/confirmare-cerere')
-    }
+  const orderData = {
+    items: this.tableRows.filter(row => row.crotalieNumber).map(row => ({
+      selectedAnimal: this.bovine,
+      crotalieNumber: row.crotalieNumber
+    })),
+    total: this.calculateTotal()
+  }
+  localStorage.setItem('currentOrder', JSON.stringify(orderData))
+  localStorage.removeItem('isModifying')
+  this.$router.push('/mpay-payment')
+}
   }
 }
 </script>

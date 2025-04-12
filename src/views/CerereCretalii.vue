@@ -147,15 +147,15 @@ export default {
       this.tableRows.push({ selectedAnimal: null, quantity: 0 })
     },
     placeOrder() {
-      const orderData = {
-        items: this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0),
-        total: this.calculateTotal()
-      }
-      localStorage.setItem('currentOrder', JSON.stringify(orderData))
-      // Ștergem flag-ul de modificare
-      localStorage.removeItem('isModifying')
-      this.$router.push('/confirmare-cerere')
-    }
+  const orderData = {
+    items: this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0),
+    total: this.calculateTotal()
+  }
+  localStorage.setItem('currentOrder', JSON.stringify(orderData))
+  localStorage.removeItem('isModifying')
+  // Modificăm redirecționarea direct către MPay
+  this.$router.push('/mpay-payment')
+}
   }
 }
 </script>

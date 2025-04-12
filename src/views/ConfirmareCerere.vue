@@ -109,7 +109,8 @@ export default {
         name: '',
         phone: '',
         email: ''
-      }
+      },
+      isSubmitting: false
     }
   },
   created() {
@@ -160,9 +161,21 @@ export default {
 
     validateAndConfirm() {
       if (this.validateForm()) {
+        this.isSubmitting = true;
+        
         // Salvăm detaliile clientului
         localStorage.setItem('clientDetails', JSON.stringify(this.clientDetails))
-        this.confirmOrder()
+        
+        // Salvăm datele comenzii pentru MPay
+        const orderDetails = {
+          orderData: this.orderData,
+          clientDetails: this.clientDetails,
+          timestamp: new Date().toISOString()
+        }
+        localStorage.setItem('orderForPayment', JSON.stringify(orderDetails))
+
+        // Redirecționăm către pagina MPay
+        this.$router.push('/mpay')
       }
     },
 
