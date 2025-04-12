@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Animal</th>
-            <th>Numar crontalie animal</th>
+            <th>Numar crotalie animal</th>
             <th>Preț unitar</th>
           </tr>
         </thead>
@@ -199,13 +199,6 @@ input[type="number"] {
 .submit-order-btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-}
-
-.crotalie-input {
-  width: 200px;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
 }
 
 @media (max-width: 768px) {
