@@ -1,28 +1,33 @@
 <template>
   <div class="admin-panel">
     <h1>Admin Panel</h1>
-    <div class="requests-container">
-      <table>
-        <thead>
-          <tr>
-            <th>IDNP</th>
-            <th>Nume</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr 
-            v-for="(request, index) in requests" 
-            :key="index" 
-            @click="openRequestDetails(request)"
-            class="clickable-row"
-          >
-            <td>{{ request.idnp }}</td>
-            <td>{{ request.name }}</td>
-            <td>{{ request.date }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="content">
+      <div class="requests-container">
+        <table>
+          <thead>
+            <tr>
+              <th>IDNP</th>
+              <th>Nume</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr 
+              v-for="(request, index) in requests" 
+              :key="index" 
+              @click="openRequestDetails(request)"
+              class="clickable-row"
+            >
+              <td>{{ request.idnp }}</td>
+              <td>{{ request.name }}</td>
+              <td>{{ request.date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="chart-container">
+        <canvas id="ordersChart"></canvas>
+      </div>
     </div>
 
     <div v-if="selectedRequest" class="modal-overlay" @click.self="closeRequestDetails">
@@ -71,16 +76,20 @@
 </template>
 
 <script>
+import { Chart, registerables } from 'chart.js';
+
 export default {
   name: 'AdminPanel',
   data() {
     return {
-      requests: [], // List of cerere (requests)
-      selectedRequest: null, // Currently selected request
-      isModifying: false // Flag to enable/disable modification
+      requests: [],
+      selectedRequest: null,
+      isModifying: false,
+      ordersByDay: {}
     };
   },
   created() {
+    Chart.register(...registerables);
     this.fetchRequests();
   },
   methods: {
@@ -95,15 +104,67 @@ export default {
             client.orders.map(order => ({
               idnp: client.IDNP,
               name: `${client.firstName || 'Ion'} ${client.lastName || 'Popescu'}`,
-              date: order.date,
+              date: order.date.split('T')[0],
               items: order.items
             }))
           );
+          this.calculateOrdersByDay();
+          this.renderChart();
         })
         .catch(error => {
           console.error('Error fetching requests:', error);
           alert('Eroare la încărcarea cererilor.');
         });
+    },
+    calculateOrdersByDay() {
+      this.ordersByDay = this.requests.reduce((acc, request) => {
+        acc[request.date] = (acc[request.date] || 0) + 1;
+        return acc;
+      }, {});
+    },
+    renderChart() {
+      const ctx = document.getElementById('ordersChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(this.ordersByDay),
+          datasets: [
+            {
+              label: 'Orders by Day',
+              data: Object.values(this.ordersByDay),
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y', // Flip the chart to make the y-axis the date
+          responsive: true,
+          maintainAspectRatio: false, // Allow the chart to fill the container
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Number of Orders'
+              },
+              beginAtZero: true
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            }
+          }
+        }
+      });
     },
     openRequestDetails(request) {
       this.selectedRequest = JSON.parse(JSON.stringify(request)); // Deep copy to avoid direct mutation
@@ -165,11 +226,35 @@ h1 {
   font-weight: 500;
 }
 
+.content {
+  display: flex;
+  gap: 24px;
+}
+
 .requests-container {
+  flex: 1;
   background: white;
   border-radius: var(--radius-md);
   padding: 24px;
   box-shadow: var(--shadow-sm);
+  overflow-y: auto;
+}
+
+.chart-container {
+  flex: 1;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  height: calc(100vh - 96px); /* Full height minus padding and header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 table {
