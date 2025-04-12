@@ -8,7 +8,6 @@
             <th>IDNP</th>
             <th>Nume</th>
             <th>Data</th>
-            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +20,6 @@
             <td>{{ request.idnp }}</td>
             <td>{{ request.name }}</td>
             <td>{{ request.date }}</td>
-            <td>{{ request.status }}</td>
           </tr>
         </tbody>
       </table>
@@ -33,7 +31,6 @@
         <p><strong>IDNP:</strong> {{ selectedRequest.idnp }}</p>
         <p><strong>Nume:</strong> {{ selectedRequest.name }}</p>
         <p><strong>Data:</strong> {{ selectedRequest.date }}</p>
-        <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
         <h3>Articole Comandate</h3>
         <table>
           <thead>
@@ -99,7 +96,6 @@ export default {
               idnp: client.IDNP,
               name: `${client.firstName || 'Ion'} ${client.lastName || 'Popescu'}`,
               date: order.date,
-              status: order.status,
               items: order.items
             }))
           );
