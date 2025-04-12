@@ -1,6 +1,15 @@
 <template>
   <div class="admin-panel">
     <h1>Admin Panel</h1>
+    
+    <!-- Chart Section -->
+    <div class="chart-container">
+      <h2>Comenzi pe zile</h2>
+      <div class="chart-wrapper">
+        <canvas ref="ordersChart"></canvas>
+      </div>
+    </div>
+
     <div class="requests-container">
       <table>
         <thead>
@@ -20,7 +29,7 @@
           >
             <td>{{ request.idnp }}</td>
             <td>{{ request.name }}</td>
-            <td>{{ request.date }}</td>
+            <td>{{ formatDate(request.date) }}</td>
             <td>{{ request.status }}</td>
           </tr>
         </tbody>
@@ -74,6 +83,9 @@
 </template>
 
 <script>
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+
 export default {
   name: 'AdminPanel',
   data() {
@@ -87,27 +99,31 @@ export default {
     this.fetchRequests();
   },
   methods: {
-    fetchRequests() {
-      fetch('http://localhost:3000/clients')
-        .then(response => {
-          if (!response.ok) throw new Error('Failed to fetch requests');
-          return response.json();
-        })
-        .then(clients => {
-          this.requests = clients.flatMap(client =>
-            client.orders.map(order => ({
-              idnp: client.IDNP,
-              name: `${client.firstName || 'Ion'} ${client.lastName || 'Popescu'}`,
-              date: order.date,
-              status: order.status,
-              items: order.items
-            }))
-          );
-        })
-        .catch(error => {
-          console.error('Error fetching requests:', error);
-          alert('Eroare la încărcarea cererilor.');
-        });
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('ro-RO');
+    },
+    async fetchRequests() {
+      try {
+        const response = await fetch('http://localhost:3000/clients');
+        if (!response.ok) throw new Error('Failed to fetch requests');
+        
+        const clients = await response.json();
+        this.requests = clients.flatMap(client =>
+          client.orders.map(order => ({
+            idnp: client.IDNP,
+            name: `${client.firstName || 'Ion'} ${client.lastName || 'Popescu'}`,
+            date: order.date,
+            status: order.status,
+            items: order.items
+          }))
+        );
+
+        this.renderChart(this.requests);
+      } catch (error) {
+        console.error('Error fetching requests:', error);
+        alert('Eroare la încărcarea cererilor.');
+      }
     },
     openRequestDetails(request) {
       this.selectedRequest = JSON.parse(JSON.stringify(request)); // Deep copy to avoid direct mutation
@@ -156,57 +172,25 @@ export default {
 </script>
 
 <style scoped>
-.admin-panel {
-  padding: 32px;
-  background-color: var(--light-gray);
-  min-height: 100vh;
-}
-
-h1 {
-  margin-bottom: 24px;
-  color: var(--text-dark);
-  font-size: 24px;
-  font-weight: 500;
-}
-
-.requests-container {
+/* Add these new styles */
+.chart-container {
   background: white;
   border-radius: var(--radius-md);
   padding: 24px;
   box-shadow: var(--shadow-sm);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
   margin-bottom: 24px;
 }
 
-th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid var(--border-color);
-}
-
-th {
+.chart-container h2 {
+  margin-bottom: 16px;
+  color: var(--text-dark);
+  font-size: 18px;
   font-weight: 500;
-  color: var(--text-gray);
-  background-color: var(--light-gray);
 }
 
-.clickable-row {
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.clickable-row:hover {
-  background-color: var(--light-gray);
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+.chart-wrapper {
+  position: relative;
+  height: 300px;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
