@@ -1,14 +1,22 @@
 <template>
   <div class="home-page">
     <div class="cards-grid">
-      <div class="card">
-        <h2>Documente primare</h2>
-        <button class="card-button">Accesați</button>
+      <!-- Move Detalii Animal to the first position -->
+      <div class="card" @click="goToAnimalDetails">
+        <h2>Detalii Animal</h2>
+        <button class="card-button">Vizualizați</button>
       </div>
 
+      <!-- Move Mijloace de identificare (CROTALII) to the second position -->
       <div class="card" @click="goToAuth">
         <h2>Mijloace de identificare (CROTALII)</h2>
         <button class="card-button">Comandă on-line</button>
+      </div>
+
+      <!-- The rest of the cards remain in their original order -->
+      <div class="card">
+        <h2>Documente primare</h2>
+        <button class="card-button">Accesați</button>
       </div>
 
       <div class="card">
@@ -44,11 +52,6 @@
       <div class="card" @click="goToAdminPanel">
         <h2>Admin Panel</h2>
         <button class="card-button">Gestionați cererile</button>
-      </div>
-
-      <div class="card" @click="goToAnimalDetails">
-        <h2>Detalii Animal</h2>
-        <button class="card-button">Vizualizați</button>
       </div>
     </div>
   </div>
