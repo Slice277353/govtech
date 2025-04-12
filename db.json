@@ -54,14 +54,38 @@
       "total": 105,
       "date": "2025-04-12T11:23:31.081Z",
       "status": "pending"
+    },
+    {
+      "id": "5d34",
+      "IDNP": "405958412886",
+      "items": [
+        {
+          "animalTypeId": 3,
+          "animalTypeName": "Caprine",
+          "quantity": 3,
+          "unitPrice": 12,
+          "rowTotal": 36
+        }
+      ],
+      "individualAnimals": [
+        "[object Object]0",
+        "[object Object]1",
+        "[object Object]2"
+      ],
+      "total": 36,
+      "date": "2025-04-12T11:31:40.227Z",
+      "status": "pending"
     }
   ],
   "animalCodeCounter": {
     "item": {
-      "item": 1,
-      "value": 4
+      "item": {
+        "item": 1,
+        "value": 4
+      },
+      "value": 8
     },
-    "value": 8
+    "value": 3
   },
   "individualAnimals": [
     {
@@ -158,6 +182,30 @@
       "animalTypeName": "Cabaline",
       "unitPrice": 15,
       "animalCode": "[object Object]7",
+      "status": "active"
+    },
+    {
+      "id": "a55f",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]0",
+      "status": "active"
+    },
+    {
+      "id": "7c77",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]1",
+      "status": "active"
+    },
+    {
+      "id": "72e8",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]2",
       "status": "active"
     }
   ]
