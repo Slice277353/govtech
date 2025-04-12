@@ -88,18 +88,86 @@ export default {
     addRow() {
       this.tableRows.push({ crotalieNumber: '' })
     },
-    placeOrder() {
-      const orderData = {
-        items: this.tableRows.filter(row => row.crotalieNumber).map(row => ({
-          selectedAnimal: this.bovine,
-          crotalieNumber: row.crotalieNumber
-        })),
-        total: this.calculateTotal()
+    async placeOrder() {
+    try {
+      // Get all crotalie numbers from current order
+      const crotalieNumbers = this.tableRows
+        .filter(row => row.crotalieNumber)
+        .map(row => row.crotalieNumber);
+
+      if (crotalieNumbers.length === 0) {
+        alert('Vă rugăm introduceți cel puțin un număr de crotalie valid.');
+        return;
       }
-      localStorage.setItem('currentOrder', JSON.stringify(orderData))
-      localStorage.removeItem('isModifying')
-      this.$router.push('/confirmare-cerere')
+
+      // Check each crotalie number in database
+      const validationPromises = crotalieNumbers.map(number => 
+        fetch(`http://localhost:3000/clients?orders.individualAnimals.animalCode=${number}`)
+          .then(res => res.json())
+          .then(clients => ({
+            number,
+            exists: clients.some(client => 
+              client.orders?.some(order => 
+                order.individualAnimals?.some(animal => animal.animalCode === number)
+            ))
+          }))
+      );
+
+      const validationResults = await Promise.all(validationPromises);
+      const invalidNumbers = validationResults.filter(r => !r.exists).map(r => r.number);
+
+      if (invalidNumbers.length > 0) {
+        alert(`Următoarele numere de crotalii nu există în baza de date:\n${invalidNumbers.join('\n')}`);
+        return;
+      }
+
+      // All numbers valid - proceed with order
+      const orderData = {
+        items: this.tableRows
+          .filter(row => row.crotalieNumber)
+          .map(row => ({
+            selectedAnimal: this.bovine,
+            crotalieNumber: row.crotalieNumber
+          })),
+        total: this.calculateTotal()
+      };
+
+      // Save to localStorage
+      localStorage.setItem('currentOrder', JSON.stringify(orderData));
+      localStorage.removeItem('isModifying');
+      
+      // Find and update all clients with these crotalie numbers
+      const updatePromises = crotalieNumbers.map(number => 
+        fetch(`http://localhost:3000/clients?orders.individualAnimals.animalCode=${number}`)
+          .then(res => res.json())
+          .then(clients => {
+            clients.forEach(client => {
+              client.orders.forEach(order => {
+                order.individualAnimals.forEach(animal => {
+                  if (animal.animalCode === number) {
+                    // Update status or other fields as needed
+                    animal.status = 'ordered';
+                  }
+                });
+              });
+              // Save updated client back to db
+              return fetch(`http://localhost:3000/clients/${client.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(client)
+              });
+            });
+          })
+      );
+
+      await Promise.all(updatePromises);
+      this.$router.push('/confirmare-cerere');
+
+    } catch (error) {
+      console.error('Error placing order:', error);
+      alert('A apărut o eroare la procesarea comenzii. Vă rugăm încercați din nou.');
     }
+  }
   }
 }
 </script>
