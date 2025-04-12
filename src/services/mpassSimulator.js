@@ -1,12 +1,4 @@
 export default {
-    userData: {
-      idnp: "2000000000000",
-      nume: "Popescu",
-      prenume: "Ion",
-      email: "ion.popescu@example.com",
-      dataNasterii: "2000-01-01",
-      cetatenie: "MD"
-    },
   
     async authenticate() {
       return new Promise((resolve, reject) => {

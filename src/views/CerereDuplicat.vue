@@ -5,7 +5,7 @@
         <thead>
           <tr>
             <th>Animal</th>
-            <th>Numar crontalie animal</th>
+            <th>Numar crotalie animal</th>
             <th>Preț unitar</th>
           </tr>
         </thead>

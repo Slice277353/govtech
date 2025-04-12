@@ -2,8 +2,6 @@ import mpassSimulator from './mpassSimulator';
 
 export default {
   isAuthenticated: false,
-  userData: null,
-  token: null,
 
   async login() {
     try {

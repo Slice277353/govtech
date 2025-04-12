@@ -1,4 +1,3 @@
-<!-- src/views/Login.vue -->
 <template>
     <div class="login-page">
       <div class="login-container">
@@ -12,51 +11,46 @@
             Pentru a continua, veți fi autentificat prin intermediul serviciului guvernamental MPass
           </p>
           
-          <div class="auth-methods">
-            <div class="auth-method mobile">
-              <h3>Semnătură mobilă</h3>
-              <div class="phone-input-container" v-if="!phoneSubmitted">
-                <div class="phone-prefix">+373</div>
-                <input 
-                  type="tel" 
-                  v-model="phoneNumber"
-                  placeholder="Introduceți numărul de telefon"
-                  class="phone-input"
-                  maxlength="8"
-                >
-              </div>
-              <p class="error-message" v-if="phoneError">{{ phoneError }}</p>
-              
-              <!-- Afișează numărul introdus după submitere -->
-              <div v-if="phoneSubmitted" class="submitted-phone">
-                Număr telefon: +373{{ phoneNumber }}
-              </div>
-  
-              <button 
-                @click="submitPhone" 
-                class="auth-button mobile"
-                :disabled="!isPhoneValid || phoneError"
-                v-if="!phoneSubmitted"
-              >
-                <i class="fas fa-mobile-alt"></i>
-                Continuă
-              </button>
-              
-              <button 
-                @click="startAuth('mobile')" 
-                class="auth-button mobile"
-                v-if="phoneSubmitted"
-              >
-                <i class="fas fa-signature"></i>
-                Semnează
-              </button>
-            </div>
+          <div class="auth-methods" v-if="!showPhoneInput">
+            <button @click="showMobileAuth" class="auth-button mobile">
+              <i class="fas fa-mobile-alt"></i>
+              Semnătură mobilă
+            </button>
             
-            <div class="separator">sau</div>
   
             <button @click="startAuth('digital')" class="auth-button digital">
               <i class="fas fa-id-card"></i>
               Semnătură digitală
+            </button>
+          </div>
+  
+          <div class="auth-method mobile" v-else>
+            <h3>Semnătură mobilă</h3>
+            <div class="phone-input-container">
+              <div class="phone-prefix">+373</div>
+              <input 
+                type="tel" 
+                v-model="phoneNumber"
+                placeholder="Introduceți numărul de telefon"
+                class="phone-input"
+                @input="validatePhoneNumber"
+                maxlength="8"
+              >
+            </div>
+            <p class="error-message" v-if="phoneError">{{ phoneError }}</p>
+            
+            <button 
+              @click="startAuth('mobile')" 
+              class="auth-button mobile"
+              :disabled="!isPhoneValid"
+            >
+              <i class="fas fa-arrow-right"></i>
+              Continuă
+            </button>
+  
+            <button @click="backToMethods" class="back-button">
+              <i class="fas fa-arrow-left"></i>
+              Înapoi
             </button>
           </div>
         </div>
@@ -89,13 +83,23 @@
         authMethod: null,
         phoneNumber: '',
         phoneError: '',
-        phoneSubmitted: false,
-        isPhoneValid: false
+        isPhoneValid: false,
+        showPhoneInput: false
       };
     },
     methods: {
+      showMobileAuth() {
+        this.showPhoneInput = true;
+      },
+  
+      backToMethods() {
+        this.showPhoneInput = false;
+        this.phoneNumber = '';
+        this.phoneError = '';
+        this.isPhoneValid = false;
+      },
+  
       validatePhoneNumber() {
-        // Remove any non-digit characters
         this.phoneNumber = this.phoneNumber.replace(/\D/g, '');
         
         if (this.phoneNumber.length === 0) {
@@ -110,20 +114,11 @@
         }
       },
   
-      submitPhone() {
-        if (this.isPhoneValid) {
-          this.loading = true;
-          this.loadingMessage = `Se trimite codul de autentificare la +373${this.phoneNumber}...`;
-  
-          // Simulate sending code
-          setTimeout(() => {
-            this.loading = false;
-            this.phoneSubmitted = true;
-          }, 2000);
-        }
-      },
-  
       async startAuth(method) {
+        if (method === 'mobile' && !this.isPhoneValid) {
+          return;
+        }
+  
         this.authMethod = method;
         this.loading = true;
         this.error = false;
@@ -148,10 +143,10 @@
         try {
           const success = await auth.login();
           if (success) {
-            this.$router.push(this.$route.query.redirect || '/');
-          } else {
-            throw new Error('Autentificare eșuată');
-          }
+            this.$router.push('/auth-success');
+            } else {
+             throw new Error('Autentificare eșuată');
+            }
         } catch (error) {
           this.error = true;
           this.errorMessage = 'A apărut o eroare în procesul de autentificare. Vă rugăm să încercați din nou.';
@@ -167,9 +162,9 @@
         this.loadingMessage = '';
         this.authMethod = null;
         this.phoneNumber = '';
-        this.phoneSubmitted = false;
         this.phoneError = '';
         this.isPhoneValid = false;
+        this.showPhoneInput = false;
       },
   
       delay(ms) {
@@ -360,6 +355,26 @@
     cursor: pointer;
   }
   
+
+  .back-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: #f5f5f5;
+}
+
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }

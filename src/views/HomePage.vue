@@ -1,28 +1,62 @@
 <template>
-  <div class="main-content">
+  <div class="home-page">
     <div class="cards-grid">
-      <router-link to="/cerere-crotalii" class="card">
-        <div class="card-content">
-          <h2>Cerere crontalii</h2>
-        </div>
-      </router-link>
-      <router-link to="/cerere-duplicat" class="card">
-        <div class="card-content">
-          <h2>Cerere duplicat</h2>
-        </div>
-      </router-link>
+      <div class="card">
+        <h2>Documente primare</h2>
+        <button class="card-button">Accesați</button>
+      </div>
+
+      <div class="card" @click="goToAuth">
+        <h2>Mijloace de identificare (CROTALII)</h2>
+        <button class="card-button">Comandă on-line</button>
+      </div>
+
+      <div class="card">
+        <h2>Verificarea crotaliei sau a documentului eliberat</h2>
+        <button class="card-button">Cautați</button>
+      </div>
+
+      <div class="card">
+        <h2>Harta alertelor și date statistice</h2>
+        <button class="card-button">Accesați</button>
+      </div>
+
+      <div class="card">
+        <h2>Cabinet în Sistemului informațional ANSA</h2>
+        <button class="card-button">Accesați</button>
+      </div>
+
+      <div class="card">
+        <h2>Înregistrare animale</h2>
+        <button class="card-button">Depune cerere</button>
+      </div>
+
+      <div class="card">
+        <h2>Cerere LIMS</h2>
+        <button class="card-button">Accesați</button>
+      </div>
+
+      <div class="card">
+        <h2>Solicitare LIMS</h2>
+        <button class="card-button">Accesați</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HomePage'
+  name: 'HomePage',
+  methods: {
+    goToAuth() {
+      this.$router.push('/login');
+    }
+  }
 }
 </script>
 
 <style scoped>
-.main-content {
+.home-page {
   padding: 32px;
   min-height: calc(100vh - 64px);
   background-color: var(--light-gray);
@@ -32,17 +66,22 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .card {
   background: white;
   border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
   box-shadow: var(--shadow-sm);
-  text-decoration: none; /* This removes the underline */
   transition: transform 0.2s, box-shadow 0.2s;
-  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
 }
 
 .card:hover {
@@ -50,25 +89,31 @@ export default {
   box-shadow: var(--shadow-md);
 }
 
-.card-content {
-  padding: 24px;
-  text-align: center;
+.card h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
 }
 
-h2 {
-  margin: 0;
-  color: var(--text-dark);
-  font-size: 24px;
-  font-weight: 500;
+.card-button {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.card-button:hover {
+  background-color: #1557b0;
 }
 
 @media (max-width: 768px) {
-  .main-content {
+  .home-page {
     padding: 16px;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr;
   }
 }
 </style>
