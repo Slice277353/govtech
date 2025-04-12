@@ -27,35 +27,37 @@
       </table>
     </div>
 
-    <div v-if="selectedRequest" class="request-details">
-      <h2>Detalii Cerere</h2>
-      <p><strong>IDNP:</strong> {{ selectedRequest.idnp }}</p>
-      <p><strong>Nume:</strong> {{ selectedRequest.name }}</p>
-      <p><strong>Data:</strong> {{ selectedRequest.date }}</p>
-      <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
-      <h3>Articole Comandate</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Animal</th>
-            <th>Cantitate</th>
-            <th>Preț unitar</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in selectedRequest.items" :key="index">
-            <td>{{ item.animalTypeName }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.unitPrice }} MDL</td>
-            <td>{{ item.rowTotal }} MDL</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="actions">
-        <button @click="acceptRequest(selectedRequest)" class="accept-btn">Acceptă</button>
-        <button @click="modifyRequest(selectedRequest)" class="modify-btn">Modifică</button>
-        <button @click="denyRequest(selectedRequest)" class="deny-btn">Respinge</button>
+    <div v-if="selectedRequest" class="modal-overlay" @click.self="closeRequestDetails">
+      <div class="modal-content">
+        <h2>Detalii Cerere</h2>
+        <p><strong>IDNP:</strong> {{ selectedRequest.idnp }}</p>
+        <p><strong>Nume:</strong> {{ selectedRequest.name }}</p>
+        <p><strong>Data:</strong> {{ selectedRequest.date }}</p>
+        <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
+        <h3>Articole Comandate</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Animal</th>
+              <th>Cantitate</th>
+              <th>Preț unitar</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in selectedRequest.items" :key="index">
+              <td>{{ item.animalTypeName }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.unitPrice }} MDL</td>
+              <td>{{ item.rowTotal }} MDL</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="actions">
+          <button @click="acceptRequest(selectedRequest)" class="accept-btn">Acceptă</button>
+          <button @click="modifyRequest(selectedRequest)" class="modify-btn">Modifică</button>
+          <button @click="denyRequest(selectedRequest)" class="deny-btn">Respinge</button>
+        </div>
       </div>
     </div>
   </div>
@@ -98,6 +100,9 @@ export default {
     },
     openRequestDetails(request) {
       this.selectedRequest = request;
+    },
+    closeRequestDetails() {
+      this.selectedRequest = null;
     },
     acceptRequest(request) {
       alert(`Cererea cu IDNP ${request.idnp} a fost acceptată.`);
@@ -171,12 +176,26 @@ th {
   background-color: var(--light-gray);
 }
 
-.request-details {
-  margin-top: 32px;
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
   background: white;
   border-radius: var(--radius-md);
   padding: 24px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  width: 90%;
+  max-width: 600px;
 }
 
 .actions {
