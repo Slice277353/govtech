@@ -1,13 +1,22 @@
 <template>
   <div class="home-page">
     <div class="cards-grid">
-      <!-- Move Detalii Animal to the first position -->
+      <!-- Detalii Animal card with input field -->
       <div class="card" @click="goToAnimalDetails">
         <h2>Detalii Animal</h2>
-        <button class="card-button">Vizualizați</button>
+        <label for="animal-id" class="input-label">Introduceți ID-ul animalului:</label>
+        <input
+          id="animal-id"
+          type="text"
+          v-model="animalId"
+          class="input-field"
+          placeholder="Ex: 12345"
+          @click.stop
+        />
+        <button class="card-button" @click.stop="goToAnimalDetails">Vizualizați</button>
       </div>
 
-      <!-- Move Mijloace de identificare (CROTALII) to the second position -->
+      <!-- Mijloace de identificare (CROTALII) card -->
       <div class="card" @click="goToAuth">
         <h2>Mijloace de identificare (CROTALII)</h2>
         <button class="card-button">Comandă on-line</button>
@@ -60,6 +69,11 @@
 <script>
 export default {
   name: 'HomePage',
+  data() {
+    return {
+      animalId: '' // Bind this to the input field
+    };
+  },
   methods: {
     goToAuth() {
       this.$router.push('/login');
@@ -68,10 +82,11 @@ export default {
       this.$router.push('/admin-panel');
     },
     goToAnimalDetails() {
+      console.log(`Navigating to animal details with ID: ${this.animalId}`);
       this.$router.push('/animal-details');
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -100,7 +115,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 200px;
+  min-height: 240px;
 }
 
 .card:hover {
@@ -128,6 +143,23 @@ export default {
 
 .card-button:hover {
   background-color: #1557b0;
+}
+
+/* Add styles for the input field and label */
+.input-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
+
+.input-field {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid var(--light-gray);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
 }
 
 @media (max-width: 768px) {

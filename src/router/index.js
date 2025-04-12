@@ -7,9 +7,8 @@ import AuthSuccess from '@/views/AuthSuccess.vue';
 import CerereCretalii from '../views/CerereCretalii.vue'
 import CerereDuplicat from '../views/CerereDuplicat.vue'
 import ConfirmareCerere from '../views/ConfirmareCerere.vue'
-import DigitalForm from '@/views/DigitalForm.vue'
-import AdminPanel from '../views/AdminPanel.vue';
-import AnimalDetails from '@/views/AnimalDetails.vue';
+import MPayPayment from '@/views/MPayPayment.vue'; 
+import PaymentSuccess from '@/views/PaymentSuccess.vue';
 
 const routes = [
   {
@@ -39,24 +38,19 @@ const routes = [
     component: ConfirmareCerere
   },
   {
-    path: '/digital-form',
-    name: 'DigitalForm',
-    component: DigitalForm
-  },
-  {
     path: '/cerere-duplicat',
     name: 'cerere-duplicat',
     component: CerereDuplicat
   },
   {
-    path: '/admin-panel',
-    name: 'AdminPanel',
-    component: AdminPanel
+    path: '/mpay-payment',
+    name: 'MPayPayment',
+    component: MPayPayment
   },
   {
-    path: '/animal-details',
-    name: 'AnimalDetails',
-    component: AnimalDetails
+    path: '/payment-success',
+    name: 'PaymentSuccess',
+    component: PaymentSuccess
   }
 ];
 

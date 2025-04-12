@@ -1,4 +1,3 @@
-<!-- src/components/layout/TopBar.vue -->
 <template>
   <div class="top-bar">
     <router-link to="/" class="logo">
