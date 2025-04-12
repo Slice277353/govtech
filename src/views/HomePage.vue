@@ -45,6 +45,11 @@
         <h2>Admin Panel</h2>
         <button class="card-button">Gestionați cererile</button>
       </div>
+
+      <div class="card" @click="goToAnimalDetails">
+        <h2>Detalii Animal</h2>
+        <button class="card-button">Vizualizați</button>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +63,9 @@ export default {
     },
     goToAdminPanel() {
       this.$router.push('/admin-panel');
+    },
+    goToAnimalDetails() {
+      this.$router.push('/animal-details');
     }
   }
 }
