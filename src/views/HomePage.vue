@@ -40,6 +40,11 @@
         <h2>Solicitare LIMS</h2>
         <button class="card-button">Accesați</button>
       </div>
+
+      <div class="card" @click="goToAdminPanel">
+        <h2>Admin Panel</h2>
+        <button class="card-button">Gestionați cererile</button>
+      </div>
     </div>
   </div>
 </template>
@@ -50,6 +55,9 @@ export default {
   methods: {
     goToAuth() {
       this.$router.push('/login');
+    },
+    goToAdminPanel() {
+      this.$router.push('/admin-panel');
     }
   }
 }

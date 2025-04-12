@@ -8,6 +8,7 @@ import CerereCretalii from '../views/CerereCretalii.vue'
 import CerereDuplicat from '../views/CerereDuplicat.vue'
 import ConfirmareCerere from '../views/ConfirmareCerere.vue'
 import DigitalForm from '@/views/DigitalForm.vue'
+import AdminPanel from '../views/AdminPanel.vue';
 
 const routes = [
   {
@@ -45,6 +46,11 @@ const routes = [
     path: '/cerere-duplicat',
     name: 'cerere-duplicat',
     component: CerereDuplicat
+  },
+  {
+    path: '/admin-panel',
+    name: 'AdminPanel',
+    component: AdminPanel
   }
 ];
 
