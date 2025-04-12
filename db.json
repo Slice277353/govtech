@@ -1,0 +1,164 @@
+{
+  "orders": [
+    {
+      "id": "8241",
+      "IDNP": "461638653779",
+      "items": [
+        {
+          "animalTypeId": 2,
+          "animalTypeName": "Ovine",
+          "quantity": 4,
+          "unitPrice": 12,
+          "rowTotal": 48
+        }
+      ],
+      "individualAnimals": [
+        "0000000001",
+        "0000000002",
+        "0000000003",
+        "0000000004"
+      ],
+      "total": 48,
+      "date": "2025-04-12T11:21:22.809Z",
+      "status": "pending"
+    },
+    {
+      "id": "ff9a",
+      "IDNP": "450663957453",
+      "items": [
+        {
+          "animalTypeId": 3,
+          "animalTypeName": "Caprine",
+          "quantity": 5,
+          "unitPrice": 12,
+          "rowTotal": 60
+        },
+        {
+          "animalTypeId": 5,
+          "animalTypeName": "Cabaline",
+          "quantity": 3,
+          "unitPrice": 15,
+          "rowTotal": 45
+        }
+      ],
+      "individualAnimals": [
+        "[object Object]0",
+        "[object Object]1",
+        "[object Object]2",
+        "[object Object]3",
+        "[object Object]4",
+        "[object Object]5",
+        "[object Object]6",
+        "[object Object]7"
+      ],
+      "total": 105,
+      "date": "2025-04-12T11:23:31.081Z",
+      "status": "pending"
+    }
+  ],
+  "animalCodeCounter": {
+    "item": {
+      "item": 1,
+      "value": 4
+    },
+    "value": 8
+  },
+  "individualAnimals": [
+    {
+      "id": "caf8",
+      "animalTypeId": 2,
+      "animalTypeName": "Ovine",
+      "unitPrice": 12,
+      "animalCode": "0000000001",
+      "status": "active"
+    },
+    {
+      "id": "e6c2",
+      "animalTypeId": 2,
+      "animalTypeName": "Ovine",
+      "unitPrice": 12,
+      "animalCode": "0000000003",
+      "status": "active"
+    },
+    {
+      "id": "b595",
+      "animalTypeId": 2,
+      "animalTypeName": "Ovine",
+      "unitPrice": 12,
+      "animalCode": "0000000002",
+      "status": "active"
+    },
+    {
+      "id": "5a98",
+      "animalTypeId": 2,
+      "animalTypeName": "Ovine",
+      "unitPrice": 12,
+      "animalCode": "0000000004",
+      "status": "active"
+    },
+    {
+      "id": "5d5c",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]0",
+      "status": "active"
+    },
+    {
+      "id": "3100",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]1",
+      "status": "active"
+    },
+    {
+      "id": "1d00",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]2",
+      "status": "active"
+    },
+    {
+      "id": "716d",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]3",
+      "status": "active"
+    },
+    {
+      "id": "c570",
+      "animalTypeId": 3,
+      "animalTypeName": "Caprine",
+      "unitPrice": 12,
+      "animalCode": "[object Object]4",
+      "status": "active"
+    },
+    {
+      "id": "6901",
+      "animalTypeId": 5,
+      "animalTypeName": "Cabaline",
+      "unitPrice": 15,
+      "animalCode": "[object Object]5",
+      "status": "active"
+    },
+    {
+      "id": "98b9",
+      "animalTypeId": 5,
+      "animalTypeName": "Cabaline",
+      "unitPrice": 15,
+      "animalCode": "[object Object]6",
+      "status": "active"
+    },
+    {
+      "id": "558b",
+      "animalTypeId": 5,
+      "animalTypeName": "Cabaline",
+      "unitPrice": 15,
+      "animalCode": "[object Object]7",
+      "status": "active"
+    }
+  ]
+}

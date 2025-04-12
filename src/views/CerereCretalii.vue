@@ -147,15 +147,90 @@ export default {
       this.tableRows.push({ selectedAnimal: null, quantity: 0 })
     },
     placeOrder() {
+  // Generate IDNP (13 digits starting with 4)
+  const generateIDNP = () => '4' + Math.random().toString().slice(2, 13);
+
+  // First get current counter
+  fetch('http://localhost:3000/animalCodeCounter')
+    .then(response => response.json())
+    .then(counter => {
+      const orderIDNP = generateIDNP();
+      const orderItems = [];
+      let animalsCreated = 0;
+
+      // Process each row in the order
+      this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0)
+        .forEach(row => {
+          // Create individual animals
+          for (let i = 0; i < row.quantity; i++) {
+            const animalCode = (counter + animalsCreated).toString().padStart(10, '0');
+            animalsCreated++;
+            
+            orderItems.push({
+              animalTypeId: row.selectedAnimal.id,
+              animalTypeName: row.selectedAnimal.name,
+              unitPrice: row.selectedAnimal.price,
+              animalCode: animalCode,
+              status: 'active'
+            });
+          }
+        });
+
+      // Create the order
       const orderData = {
-        items: this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0),
-        total: this.calculateTotal()
-      }
-      localStorage.setItem('currentOrder', JSON.stringify(orderData))
-      // Ștergem flag-ul de modificare
-      localStorage.removeItem('isModifying')
-      this.$router.push('/confirmare-cerere')
-    }
+        IDNP: orderIDNP,
+        items: this.tableRows.filter(row => row.selectedAnimal && row.quantity > 0)
+          .map(row => ({
+            animalTypeId: row.selectedAnimal.id,
+            animalTypeName: row.selectedAnimal.name,
+            quantity: row.quantity,
+            unitPrice: row.selectedAnimal.price,
+            rowTotal: this.calculateRowTotal(row)
+          })),
+        individualAnimals: orderItems.map(a => a.animalCode),
+        total: this.calculateTotal(),
+        date: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      // Save to localStorage
+      localStorage.setItem('currentOrder', JSON.stringify(orderData));
+      localStorage.removeItem('isModifying');
+
+      // First create all individual animals
+      const animalPromises = orderItems.map(animal => 
+        fetch('http://localhost:3000/individualAnimals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(animal)
+        })
+      );
+
+      return Promise.all(animalPromises)
+        .then(() => fetch('http://localhost:3000/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        }));
+    })
+    .then(() => {
+      // Update the counter
+      const totalAnimals = this.tableRows
+        .filter(row => row.selectedAnimal && row.quantity > 0)
+        .reduce((sum, row) => sum + row.quantity, 0);
+      
+      return fetch('http://localhost:3000/animalCodeCounter', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: totalAnimals })
+      });
+    })
+    .then(() => this.$router.push('/confirmare-cerere'))
+    .catch(error => {
+      console.error('Error:', error);
+      this.$router.push('/confirmare-cerere');
+    });
+}
   }
 }
 </script>
