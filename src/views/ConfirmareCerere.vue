@@ -55,7 +55,7 @@
               id="phone" 
               v-model="clientDetails.phone"
               :class="{ 'error': validationErrors.phone }"
-              disabled
+              @input="validatePhone"
             >
           </div>
 
@@ -66,7 +66,7 @@
               id="email" 
               v-model="clientDetails.email"
               :class="{ 'error': validationErrors.email }"
-              disabled
+              @input="validateEmail"
             >
           </div>
         </div>
@@ -226,6 +226,22 @@ export default {
       localStorage.removeItem('isModifying');
       localStorage.removeItem('clientDetails');
       this.$router.push('/');
+    },
+    validatePhone() {
+      const phoneRegex = /^(?:\+373|0)(?:6[789]|7[89])\d{6}$/;
+      if (!phoneRegex.test(this.clientDetails.phone)) {
+        this.validationErrors.phone = 'Numărul de telefon nu este valid';
+      } else {
+        this.validationErrors.phone = '';
+      }
+    },
+    validateEmail() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(this.clientDetails.email)) {
+        this.validationErrors.email = 'Adresa de email nu este validă';
+      } else {
+        this.validationErrors.email = '';
+      }
     }
   }
 };
