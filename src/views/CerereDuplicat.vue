@@ -17,18 +17,24 @@
                 type="text" 
                 v-model="row.crotalieNumber"
                 class="crotalie-input"
+                placeholder="Introduceți numărul crotaliei"
               >
             </td>
             <td>15 MDL</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="text-right">Total:</td>
+            <td>{{ calculateTotal() }} MDL</td>
+          </tr>
+        </tfoot>
       </table>
 
       <div class="actions">
-        <button @click="addRow" class="add-btn">Adaugă rând</button>
-        <div class="total">
-          Total: {{ calculateTotal() }} MDL
-        </div>
+        <button @click="addRow" class="add-btn">
+          <i class="fas fa-plus"></i> Adaugă rând
+        </button>
       </div>
 
       <div class="submit-section">
@@ -46,16 +52,20 @@
 
 <script>
 export default {
-  name: 'CerereCretalii',
+  name: 'CerereDuplicat',
   data() {
     return {
       bovine: { id: 1, name: 'Bovine', price: 15 },
-      tableRows: []
+      tableRows: [],
+      isLoading: false,
+      errorMessage: ''
     }
   },
   computed: {
     hasValidOrder() {
-      return this.tableRows.some(row => row.crotalieNumber)
+      return this.tableRows.some(row => 
+        row.crotalieNumber && row.crotalieNumber.trim().length > 0
+      )
     }
   },
   created() {
@@ -64,7 +74,7 @@ export default {
       const savedOrder = localStorage.getItem('currentOrder')
       if (savedOrder) {
         const orderData = JSON.parse(savedOrder)
-        this.tableRows = orderData.items.map(item => ({
+        this.tableRows = (orderData?.items ?? []).map(item => ({
           crotalieNumber: item.crotalieNumber
         }))
         
@@ -80,53 +90,87 @@ export default {
   },
   methods: {
     addEmptyRow() {
-      this.tableRows = [{ crotalieNumber: '' }]
+      this.tableRows.push({ crotalieNumber: '' })
     },
     calculateTotal() {
-      return this.tableRows.filter(row => row.crotalieNumber).length * this.bovine.price
+      return this.tableRows.filter(row => 
+        row.crotalieNumber && row.crotalieNumber.trim().length > 0
+      ).length * this.bovine.price
     },
     addRow() {
       this.tableRows.push({ crotalieNumber: '' })
     },
+    async validateCrotalieNumbers(crotalieNumbers, hardcodedIDNP) {
+      try {
+        const response = await fetch(`http://localhost:3000/idnpRecords?IDNP=${hardcodedIDNP}`);
+        if (!response.ok) throw new Error('Failed to validate crotalii');
+        
+        const records = await response.json();
+        return crotalieNumbers.map(number => ({
+          number,
+          exists: records.some(record => record.animalCodes.includes(number))
+        }));
+      } catch (error) {
+        console.error('Validation error:', error);
+        throw new Error('Eroare la validarea numerelor de crotalii');
+      }
+    },
     async placeOrder() {
       try {
+        this.isLoading = true;
+        this.errorMessage = '';
+
         const hardcodedIDNP = localStorage.getItem('hardcodedIDNP');
         if (!hardcodedIDNP) {
-          alert('IDNP-ul nu a fost setat. Vă rugăm să vă autentificați din nou.');
-          return;
+          throw new Error('IDNP-ul nu a fost setat. Vă rugăm să vă autentificați din nou.');
         }
 
         const crotalieNumbers = this.tableRows
-          .filter(row => row.crotalieNumber)
-          .map(row => row.crotalieNumber);
+          .filter(row => row.crotalieNumber && row.crotalieNumber.trim().length > 0)
+          .map(row => row.crotalieNumber.trim());
 
         if (crotalieNumbers.length === 0) {
-          alert('Vă rugăm introduceți cel puțin un număr de crotalie valid.');
-          return;
+          throw new Error('Vă rugăm introduceți cel puțin un număr de crotalie valid.');
         }
 
-        const validationPromises = crotalieNumbers.map(number =>
-          fetch(`http://localhost:3000/idnpRecords?IDNP=${hardcodedIDNP}`)
-            .then(res => res.json())
-            .then(records => ({
-              number,
-              exists: records.some(record => record.animalCodes.includes(number))
-            }))
-        );
-
-        const validationResults = await Promise.all(validationPromises);
+        // Validăm numerele de crotalii
+        const validationResults = await this.validateCrotalieNumbers(crotalieNumbers, hardcodedIDNP);
         const invalidNumbers = validationResults.filter(r => !r.exists).map(r => r.number);
 
         if (invalidNumbers.length > 0) {
-          alert(`Următoarele numere de crotalii nu sunt asociate cu IDNP-ul:\n${invalidNumbers.join('\n')}`);
-          return;
+          throw new Error(`Următoarele numere de crotalii nu sunt asociate cu IDNP-ul:\n${invalidNumbers.join('\n')}`);
         }
 
-        // All numbers are valid, navigate to order confirmation
-        this.$router.push('/confirmare-cerere');
+        // Creăm obiectul comenzii
+        const newOrder = {
+          orderId: Date.now(),
+          date: new Date().toISOString(),
+          status: 'pending',
+          items: this.tableRows
+            .filter(row => row.crotalieNumber && row.crotalieNumber.trim().length > 0)
+            .map(row => ({
+              crotalieNumber: row.crotalieNumber.trim(),
+              price: this.bovine.price,
+              type: 'duplicate'
+            })),
+          total: this.calculateTotal()
+        };
+
+        // Salvăm comanda în localStorage pentru MDelivery
+        localStorage.setItem('currentOrder', JSON.stringify({
+          clientIDNP: hardcodedIDNP,
+          orderDetails: newOrder
+        }));
+        localStorage.removeItem('isModifying');
+
+        // Redirecționăm către MDelivery
+        this.$router.push('/mdelivery-payment');
       } catch (error) {
         console.error('Error placing order:', error);
-        alert('A apărut o eroare la procesarea comenzii. Vă rugăm încercați din nou.');
+        this.errorMessage = error.message;
+        alert(this.errorMessage);
+      } finally {
+        this.isLoading = false;
       }
     }
   }

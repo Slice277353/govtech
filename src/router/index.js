@@ -7,6 +7,7 @@ import AuthSuccess from '@/views/AuthSuccess.vue';
 import CerereCretalii from '../views/CerereCretalii.vue'
 import CerereDuplicat from '../views/CerereDuplicat.vue'
 import ConfirmareCerere from '../views/ConfirmareCerere.vue'
+import MDeliveryPayment from '@/views/MDeliveryPayment.vue'
 import MPayPayment from '@/views/MPayPayment.vue'; 
 import PaymentSuccess from '@/views/PaymentSuccess.vue';
 import AnimalDetails from '@/views/AnimalDetails.vue';
@@ -53,6 +54,11 @@ const routes = [
     path: '/payment-success',
     name: 'PaymentSuccess',
     component: PaymentSuccess
+  },
+  {
+    path: '/mdelivery-payment',
+    name: 'MDeliveryPayment',
+    component: MDeliveryPayment
   },
   {
     path: '/animal-details',
