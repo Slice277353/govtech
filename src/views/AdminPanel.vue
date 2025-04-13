@@ -216,7 +216,7 @@ export default {
 .admin-panel {
   padding: 32px;
   background-color: var(--light-gray);
-  min-height: 100vh;
+  max-height: 50%;
 }
 
 h1 {

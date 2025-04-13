@@ -3,14 +3,13 @@
     <div class="cards-grid">
       <!-- Detalii Animal card with input field -->
       <div class="card" @click="goToAnimalDetails">
-        <h2>Detalii Animal</h2>
-        <label for="animal-id" class="input-label">Introduceți ID-ul animalului:</label>
+        <h2><br>Detalii Animal</h2>
         <input
           id="animal-id"
           type="text"
           v-model="animalId"
           class="input-field"
-          placeholder="Ex: 12345"
+          placeholder="Introduceți ID-ul animalului"
           @click.stop
         />
         <button class="card-button" @click.stop="goToAnimalDetails">Vizualizați</button>
@@ -18,11 +17,11 @@
 
       <!-- Mijloace de identificare (CROTALII) card -->
       <div class="card" @click="goToAuth">
-        <h2>Mijloace de identificare (CROTALII)</h2>
+        <h2><br>Mijloace de identificare <br>(CROTALII)</h2>
         <button class="card-button">Comandă on-line</button>
       </div>
 
-      <!-- The rest of the cards remain in their original order -->
+      <!-- The rest of the cards remain in their original order
       <div class="card">
         <h2>Documente primare</h2>
         <button class="card-button">Accesați</button>
@@ -56,10 +55,10 @@
       <div class="card">
         <h2>Solicitare LIMS</h2>
         <button class="card-button">Accesați</button>
-      </div>
+      </div> -->
 
       <div class="card" @click="goToAdminPanel">
-        <h2>Admin Panel</h2>
+        <h2><br>Admin Panel</h2>
         <button class="card-button">Gestionați cererile</button>
       </div>
     </div>
@@ -98,6 +97,7 @@ export default {
 
 .cards-grid {
   display: grid;
+  grid-template-rows: 0.5fr 1fr 1fr;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
   max-width: 1400px;
@@ -105,6 +105,7 @@ export default {
 }
 
 .card {
+  grid-row: 2;
   background: white;
   border-radius: var(--radius-md);
   padding: 24px;
@@ -115,7 +116,8 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 240px;
+  /* min-height: 240px; */
+  height: 100%;
 }
 
 .card:hover {

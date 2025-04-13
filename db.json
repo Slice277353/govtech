@@ -11,7 +11,7 @@
     },
     {
       "id": "2",
-      "IDNP": "432205272461",
+      "IDNP": "431382043871",
       "animalCodes": [
         "0000000004",
         "0000000005",
@@ -20,7 +20,7 @@
     },
     {
       "id": "2a39",
-      "IDNP": "413288808544",
+      "IDNP": "431382043871",
       "animalCodes": [
         "0000000006",
         "0000000007",
@@ -31,7 +31,7 @@
     },
     {
       "id": "25ba",
-      "IDNP": "477880130933",
+      "IDNP": "431382043871",
       "animalCodes": [
         "0000000011",
         "0000000012",
@@ -42,7 +42,7 @@
     },
     {
       "id": "69e8",
-      "IDNP": "441369028270",
+      "IDNP": "431382043871",
       "animalCodes": [
         "0000000016",
         "0000000017",
@@ -51,17 +51,36 @@
     },
     {
       "id": "e0a2",
-      "IDNP": "461668467743",
+      "IDNP": "431382043871",
       "animalCodes": [
         "0000000019",
         "0000000020"
+      ]
+    },
+    {
+      "id": "fbed",
+      "IDNP": "431382043871",
+      "animalCodes": [
+        "0000000021",
+        "0000000022",
+        "0000000023"
+      ]
+    },
+    {
+      "id": "9dff",
+      "IDNP": "431382043871",
+      "animalCodes": [
+        "0000000024",
+        "0000000025"
       ]
     }
   ],
   "clients": [
     {
       "id": "1",
-      "IDNP": "431382043871",
+      "IDNP": "876500003871",
+      "firstName": "Bruno",
+      "lastName": "Mihaila",
       "orders": [
         {
           "orderId": 1744477568969,
@@ -131,7 +150,9 @@
     },
     {
       "id": "2",
-      "IDNP": "432205272461",
+      "IDNP": "201382043871",
+      "firstName": "Ana",
+      "lastName": "Macelaru",
       "orders": [
         {
           "orderId": 1744477568971,
@@ -178,7 +199,7 @@
     },
     {
       "id": "9c23",
-      "IDNP": "413288808544",
+      "IDNP": "431382043871",
       "orders": [
         {
           "orderId": 1744477568969,
@@ -278,7 +299,7 @@
     },
     {
       "id": "60a9",
-      "IDNP": "461668467743",
+      "IDNP": "431382043871",
       "orders": [
         {
           "orderId": 1744480691743,
@@ -310,6 +331,82 @@
           "total": 30
         }
       ]
+    },
+    {
+      "id": "ebbd",
+      "IDNP": "431382043871",
+      "orders": [
+        {
+          "orderId": 1744480976362,
+          "date": "2025-04-12T18:02:56.362Z",
+          "status": "pending",
+          "items": [
+            {
+              "animalTypeId": 2,
+              "animalTypeName": "Ovine",
+              "quantity": 3,
+              "unitPrice": 12,
+              "rowTotal": 36
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000021",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000022",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000023",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            }
+          ],
+          "total": 36
+        }
+      ]
+    },
+    {
+      "id": "d472",
+      "IDNP": "431382043871",
+      "orders": [
+        {
+          "orderId": 1744490123254,
+          "date": "2025-04-12T20:35:23.254Z",
+          "status": "pending",
+          "items": [
+            {
+              "animalTypeId": 2,
+              "animalTypeName": "Ovine",
+              "quantity": 2,
+              "unitPrice": 12,
+              "rowTotal": 24
+            }
+          ],
+          "individualAnimals": [
+            {
+              "animalCode": "0000000024",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            },
+            {
+              "animalCode": "0000000025",
+              "animalTypeId": 2,
+              "status": "active",
+              "registrationDate": "2025-04-12"
+            }
+          ],
+          "total": 24
+        }
+      ]
     }
   ],
   "animalCodeCounter": {
@@ -317,15 +414,21 @@
       "item": {
         "item": {
           "item": {
-            "value": 6
+            "item": {
+              "item": {
+                "value": 6
+              },
+              "value": 11
+            },
+            "value": 16
           },
-          "value": 11
+          "value": 19
         },
-        "value": 16
+        "value": 21
       },
-      "value": 19
+      "value": 24
     },
-    "value": 21
+    "value": 26
   },
   "config": {
     "animalTypes": [
