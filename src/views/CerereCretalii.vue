@@ -124,7 +124,7 @@ export default {
       if (savedOrder) {
         const orderData = JSON.parse(savedOrder)
         // Populăm tableRows cu datele salvate
-        this.tableRows = orderData.items.map(item => ({
+        this.tableRows = (orderData?.items ?? []).map(item => ({
           selectedAnimal: this.findAnimalById(item.selectedAnimal.id),
           quantity: item.quantity
         }))
@@ -297,14 +297,16 @@ export default {
           ]);
         })
         .then(() => {
-          localStorage.setItem('currentOrder', JSON.stringify({ clientIDNP }));
+          const orderTotal = this.calculateTotal(); // Calculate the total price of the order
+          localStorage.setItem('currentOrder', JSON.stringify({ clientIDNP, orderDetails: { total: orderTotal } }));
           localStorage.removeItem('isModifying');
-          this.$router.push('/confirmare-cerere');
+          this.$router.push('/mdelivery-payment');
         })
         .catch(error => {
           console.error('Error saving order:', error);
           alert('Eroare la salvarea comenzii. Vă rugăm încercați din nou.');
         });
+        
     }
   }
 }
